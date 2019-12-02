@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "gatsby": "^2.18.5",
+    "gh-pages": "^2.1.1",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0"
+  },
+  "scripts": {
+    "deploy": "gatsby build && gh-pages -d public -b master"
+  }
+}
