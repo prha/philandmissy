@@ -1,3 +1,7 @@
+# google authentication
+credentials.json
+token.pickle
+
 .cache
 node_modules
 public
