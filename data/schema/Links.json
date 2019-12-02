@@ -1,0 +1,73 @@
+{
+  "title": "Links",
+  "description": "A record of links sent to each other.",
+  "$id": "http://schema.lever.co/collections/Links.json",
+  "type": "object",
+  "required": [],
+  "properties": {
+    "images": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Link"
+      }
+    },
+    "youtube": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Link"
+      }
+    },
+    "twitter": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Link"
+      }
+    },
+    "news": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Link"
+      }
+    },
+    "other": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Link"
+      }
+    },
+    "contacts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Link"
+      }
+    },
+    "last_updated": {
+      "type": "number",
+      "description": "unix time since script last run. New query only has to go back this far"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "Link": {
+      "description": "",
+      "properties": {
+        "include": {
+          "type": "boolean",
+          "description": "if true, display in site"
+        },
+        "sender": {
+          "type": "string",
+          "enum": ["missy", "phil"]
+        },
+        "timestamp": {
+          "type": "number",
+          "description": "time link sent"
+        },
+        "url": {
+          "type": "string"
+        }
+      },
+      "required": ["url"]
+    }
+  }
+}
