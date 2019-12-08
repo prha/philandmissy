@@ -2,7 +2,6 @@ import base64
 import email
 import json
 import re
-import time
 
 from collections import namedtuple
 from datetime import datetime
@@ -11,6 +10,14 @@ from apiclient import errors
 from gmail_api import get_credentials
 from googleapiclient.discovery import build
 
+CATEGORY_TO_REGEX = {
+    'youtube': 'youtube.com|youtu.be',
+    'twitter': 'twitter.com',
+    'news': 'nytimes.com|nyti.me|npr.org|washingtonpost.com|theatlantic.com',
+    'facebook': 'facebook.com',
+    'images': 'imgur.com|photos.app.goo.gl|.jpg|.png|.gifv|.gif',
+    'reddit': 'reddit.com',
+}
 
 def get_message_ids(service, query):
     try:
@@ -29,75 +36,95 @@ def get_message_ids(service, query):
     
     return [msg['id'] for msg in messages]
 
-def discard_message(service, msg_id):
-    """
-    Returns True if only one recipient and no CCs.
-    Exclude messages that involve others.
-    """
-    message = service.users().messages().get(userId='me',
-                                             id=msg_id,
-                                             format='metadata').execute()
-    to_field = ""
-    cc_field = ""
-    payload = message.get('payload')
-    for header in payload.get('headers', []):
-        if header['name'] == 'To':
-            to_field = header['value']
-        if header['name'] == 'Cc':
-            cc_field = header['value']
-    
-    if not to_field:
-        # chats won't have a 'To' field
-        print(f"No recipients found for message {msg_id}")
-        return False
+def _get_message(service, msg_id):
+    """For chats, the message snippet contains the entire message.
+    No need to decode the raw message.
 
-    # Recipients come in form "First Name <email@email.com>" when encoded.
-    # Get email info from inside brackets to determine how many recipients
-    recipient_text = to_field + cc_field
+    Args:
+        service: Authorized Gmail API service instance.
+        msg_id: The ID of the Message required.
+
+    Returns:
+        string: text of the message
+    """
+    try:
+        message = service.users().messages().get(userId='me', id=msg_id).execute()
+        return message
+    except errors.HttpError as error:
+        print(f"an error occurred: {error}")
+
+def get_links(message_text):
+    urls = re.findall(
+        "http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+",
+        message_text
+    )
+    return urls
+
+def get_email_addresses(text):
+    """
+    Message recipients come in as "First Last <firstlast@email.com>"
+    Returns email string "firstlast@email.com"
+    """
     regex = re.compile('<(.*?)>')
-    recipients = regex.findall(recipient_text)
+    recipients = regex.findall(text)
 
-    return len(recipients) > 1
+    return recipients
 
-def get_mime_message(service, msg_id):
-  """Get a Message and use it to create a MIME Message.
+def add_urls_to_data(data, message):
+    """
+    Given a GMail Message, add any links found in the text to data object
+    Returns data - json object of links organized by category
+    """
+    message_id = message['id']
+    for message_header in message['payload']['headers']:
+        if message_header['name'] == 'From':
+            message_from = message_header['value']
+            break
 
-  Args:
-    service: Authorized Gmail API service instance.
-    msg_id: The ID of the Message required.
+    urls = get_links(message['snippet'])
+    for url in urls:
+        print(f"{message['id']}: {url}")
+        found_category = None
+        for category, regex in CATEGORY_TO_REGEX.items():
+            if len(re.findall(regex, url)):
+                found_category = category
+                break
 
-  Returns:
-    A MIME Message, consisting of data from Message.
-  """
-  try:
-    message = service.users().messages().get(userId='me', id=msg_id,
-                                             format='raw').execute()
+        if not found_category:
+            found_category = 'other'
 
-    print(f"Message snippet: {message['snippet']}")
+        if found_category not in data:
+            data[found_category] = {}
 
-    msg_bytes = base64.urlsafe_b64decode(message['raw'].encode('ASCII'))
-    mime_msg = email.message_from_bytes(msg_bytes)
+        data[found_category][message_id] = {
+            'url': url,
+            'timestamp': message['internalDate'],
+            'from': get_email_addresses(message_from)[0]
+        }
 
-    return mime_msg
-
-  except errors.HttpError as error:
-    print(f"an error occurred: {error}")
+    return data
 
 if __name__ == "__main__":
     creds = get_credentials()
     service = build('gmail', 'v1', credentials=creds)
 
+    with open("links.json", "r") as jsonFile:
+        data = json.load(jsonFile)
+
     # TODO: ask for emails via command line and put into `q`
+    # TODO: set after date in query based on last time script was run
     q = """
+        label:chats
         https://
-        after:2019/11/15
+        after:2019/01/5
     """
     messageIds = get_message_ids(service, q)
     for msg_id in messageIds:
-        if discard_message(service, msg_id):
-            print(f"discarding message {msg_id}")
-            continue
+        message = _get_message(service, msg_id)
+        data = add_urls_to_data(data, message)
 
-        mime_msg = get_mime_message(service, msg_id)
-        print('-------------------')
-        print(f"message_body: {mime_msg.as_string()}")
+    now = datetime.now()
+    data["last_updated"] = now.strftime("%s")
+
+    with open("links.json", "w") as jsonFile:
+        json.dump(data, jsonFile)
