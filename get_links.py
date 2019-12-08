@@ -108,16 +108,34 @@ if __name__ == "__main__":
     creds = get_credentials()
     service = build('gmail', 'v1', credentials=creds)
 
-    with open("links.json", "r") as jsonFile:
-        data = json.load(jsonFile)
+    email = input("Enter email of person you'd like to find sent links with:\n> ")
+    filename = f"{email.split('@')[0]}_links.json"
+    start_date = None
 
-    # TODO: ask for emails via command line and put into `q`
-    # TODO: set after date in query based on last time script was run
-    q = """
-        label:chats
-        https://
-        after:2019/01/5
-    """
+    try:
+        with open(f"data/{filename}.json", "r") as jsonFile:
+            data = json.load(jsonFile)
+    except (FileNotFoundError, json.decoder.JSONDecodeError):
+        print(f"\nLinks with {email} have not been found yet. Starting fresh!\n")
+        data = {}
+
+    if data.get("last_updated"):
+        readable = datetime.fromtimestamp(int(data["last_updated"])).strftime("%Y/%m/%d")
+        print(f"\nLinks were last updated on {readable} - start from here? If no, you will be prompted to enter start date.")
+        start_answer = input("yes/no\n> ")
+        if start_answer in ["yes", "Yes", "y", "Y"]:
+            start_date = readable
+
+    if not data.get("last_updated") or not start_date:
+        start_date = input("Start date? Omitting this value starts search at beginning of time. YYYY/MM/DD.\n> ")
+    start_date = f"after:{start_date}" if start_date else ""
+
+    end_date = input("End date? Skipping this will search up to most recent messages. YYYY/MM/DD.\n> ")
+    end_date = f"before:{end_date}" if end_date else ""
+
+    q = f"{email} label:chats (https:// || http://) {start_date} {end_date}"
+    print(f"Here's what your gmail search looks like:\n'{q}'")
+
     messageIds = get_message_ids(service, q)
     for msg_id in messageIds:
         message = _get_message(service, msg_id)
@@ -126,5 +144,5 @@ if __name__ == "__main__":
     now = datetime.now()
     data["last_updated"] = now.strftime("%s")
 
-    with open("links.json", "w") as jsonFile:
+    with open(f"data/{filename}", "w") as jsonFile:
         json.dump(data, jsonFile)
