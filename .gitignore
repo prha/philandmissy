@@ -1,0 +1,11 @@
+# google authentication
+credentials.json
+token.pickle
+
+# hide for now until we can encrypt
+data/
+
+*.pyc
+.cache
+node_modules
+public

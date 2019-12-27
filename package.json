@@ -1,0 +1,15 @@
+{
+  "dependencies": {
+    "gatsby": "^2.18.5",
+    "gatsby-cli": "^2.8.18",
+    "gatsby-source-filesystem": "^2.1.42",
+    "gatsby-transformer-json": "^2.2.22",
+    "react-twitter-embed": "^3.0.3",
+    "gh-pages": "^2.1.1",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0"
+  },
+  "scripts": {
+    "deploy": "gatsby build && gh-pages -d public -b master"
+  }
+}
