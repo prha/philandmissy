@@ -19,6 +19,7 @@ CATEGORY_TO_REGEX = {
     'reddit': 'reddit.com',
 }
 
+
 def get_message_ids(service, query):
     try:
         response = service.users().messages().list(userId='me', q=query).execute()
@@ -26,15 +27,19 @@ def get_message_ids(service, query):
 
         while 'nextPageToken' in response:
             page_token = response['nextPageToken']
-            response = service.users().messages().list(userId='me',
-                                                      q=query,
-                                                      pageToken=page_token).execute()
+            response = (
+                service.users()
+                .messages()
+                .list(userId='me', q=query, pageToken=page_token)
+                .execute()
+            )
             messages.extend(response.get('messages', []))
 
     except errors.HttpError as error:
         print(f"An error occurred: {error}")
-    
+
     return [msg['id'] for msg in messages]
+
 
 def _get_message(service, msg_id):
     """For chats, the message snippet contains the entire message.
@@ -53,12 +58,14 @@ def _get_message(service, msg_id):
     except errors.HttpError as error:
         print(f"an error occurred: {error}")
 
+
 def get_links(message_text):
     urls = re.findall(
         "http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+",
-        message_text
+        message_text,
     )
     return urls
+
 
 def get_email_addresses(text):
     """
@@ -69,6 +76,7 @@ def get_email_addresses(text):
     recipients = regex.findall(text)
 
     return recipients
+
 
 def add_urls_to_data(data, message):
     """
@@ -94,15 +102,20 @@ def add_urls_to_data(data, message):
             found_category = 'other'
 
         if found_category not in data:
-            data[found_category] = {}
+            data[found_category] = []
 
-        data[found_category][message_id] = {
-            'url': url,
-            'timestamp': message['internalDate'],
-            'from': get_email_addresses(message_from)[0]
-        }
+        category = data[found_category]
+        category.append(
+            {
+                'url': url,
+                'timestamp': message['internalDate'],
+                'from': get_email_addresses(message_from)[0],
+            }
+        )
+        data[found_category] = category
 
     return data
+
 
 if __name__ == "__main__":
     creds = get_credentials()
@@ -121,16 +134,22 @@ if __name__ == "__main__":
 
     if data.get("last_updated"):
         readable = datetime.fromtimestamp(int(data["last_updated"])).strftime("%Y/%m/%d")
-        print(f"\nLinks were last updated on {readable} - start from here? If no, you will be prompted to enter start date.")
+        print(
+            f"\nLinks were last updated on {readable} - start from here? If no, you will be prompted to enter start date."
+        )
         start_answer = input("yes/no\n> ")
         if start_answer in ["yes", "Yes", "y", "Y"]:
             start_date = readable
 
     if not data.get("last_updated") or not start_date:
-        start_date = input("Start date? Omitting this value starts search at beginning of time. YYYY/MM/DD.\n> ")
+        start_date = input(
+            "Start date? Omitting this value starts search at beginning of time. YYYY/MM/DD.\n> "
+        )
     start_date = f"after:{start_date}" if start_date else ""
 
-    end_date = input("End date? Skipping this will search up to most recent messages. YYYY/MM/DD.\n> ")
+    end_date = input(
+        "End date? Skipping this will search up to most recent messages. YYYY/MM/DD.\n> "
+    )
     end_date = f"before:{end_date}" if end_date else ""
 
     q = f"{email} label:chats (https:// || http://) {start_date} {end_date}"
