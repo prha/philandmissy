@@ -123,11 +123,13 @@ if __name__ == "__main__":
     service = build('gmail', 'v1', credentials=creds)
 
     email = input("Enter email of person you'd like to find sent links with:\n> ")
-    filename = f"{email.split('@')[0]}_links.json"
+
+    filename = input("new filename? Blank will create or append to all_links.json:\n> ")
+    filename = filename or "all_links"
     start_date = None
 
     try:
-        with open(f"data/{filename}.json", "r") as jsonFile:
+        with open(f"src/data/{filename}.json", "r") as jsonFile:
             data = json.load(jsonFile)
     except (FileNotFoundError, json.decoder.JSONDecodeError):
         print(f"\nLinks with {email} have not been found yet. Starting fresh!\n")
@@ -154,7 +156,7 @@ if __name__ == "__main__":
     end_date = f"before:{end_date}" if end_date else ""
 
     q = f"{email} label:chats (https:// || http://) {start_date} {end_date}"
-    print(f"Here's what your gmail search looks like:\n'{q}'")
+    print(f"Here's what your gmail search looks like:\n'{q}'\n")
 
     messageIds = get_message_ids(service, q)
     for msg_id in messageIds:
@@ -164,5 +166,5 @@ if __name__ == "__main__":
     now = datetime.now()
     data["last_updated"] = now.strftime("%s")
 
-    with open(f"data/{filename}", "w") as jsonFile:
+    with open(f"src/data/{filename}.json", "w+") as jsonFile:
         json.dump(data, jsonFile)

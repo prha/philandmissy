@@ -2,8 +2,7 @@
 credentials.json
 token.pickle
 
-# hide for now until we can encrypt
-data/
+src/data/
 
 *.pyc
 .cache
