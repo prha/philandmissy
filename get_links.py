@@ -107,9 +107,10 @@ def add_urls_to_data(data, message):
         category = data[found_category]
         category.append(
             {
-                'url': url,
-                'timestamp': message['internalDate'],
                 'from': get_email_addresses(message_from)[0],
+                'message_id': message_id,
+                'timestamp': message['internalDate'],
+                'url': url,
             }
         )
         data[found_category] = category
