@@ -1,9 +1,6 @@
-import base64
-import email
 import json
 import re
 
-from collections import namedtuple
 from datetime import datetime
 
 from apiclient import errors
@@ -61,7 +58,7 @@ def _get_message(service, msg_id):
 
 def get_links(message_text):
     urls = re.findall(
-        "http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+",
+        r"http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+",
         message_text,
     )
     return urls
@@ -118,14 +115,13 @@ def add_urls_to_data(data, message):
     return data
 
 
-if __name__ == "__main__":
+def run():
     creds = get_credentials()
     service = build('gmail', 'v1', credentials=creds)
 
     email = input("Enter email of person you'd like to find sent links with:\n> ")
-
     filename = input("new filename? Blank will create or append to all_links.json:\n> ")
-    filename = filename or "all_links"
+    filename = filename or "links"
     start_date = None
 
     try:
@@ -168,3 +164,7 @@ if __name__ == "__main__":
 
     with open(f"src/data/{filename}.json", "w+") as jsonFile:
         json.dump(data, jsonFile)
+
+
+if __name__ == "__main__":
+    run()
