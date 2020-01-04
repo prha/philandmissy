@@ -1,6 +1,8 @@
 import React from "react";
 import { graphql } from "gatsby";
 import { TwitterTweetEmbed } from "react-twitter-embed";
+import { Checkbox } from "../components/checkbox";
+import { copyValue } from "../util";
 
 const TWEET_ID_REGEX = /\d+/g;
 
@@ -33,6 +35,8 @@ export default ({ data }) => {
     return includedLinks[tweetId];
   });
 
+  const jsonValue = JSON.stringify(displayLinks, null, 2);
+
   return (
     <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0 }}>
       <div
@@ -55,9 +59,8 @@ export default ({ data }) => {
               style={{ display: "flex", flexDirection: "row" }}
             >
               <div>
-                <input
-                  type="checkbox"
-                  checked={included}
+                <Checkbox
+                  checked={!!included}
                   onChange={() => toggleLink(tweetId)}
                   style={{ margin: 20 }}
                 />
@@ -79,9 +82,32 @@ export default ({ data }) => {
           overflow: "auto"
         }}
       >
+        <div
+          style={{
+            backgroundColor: "#00BC9D",
+            border: "1px solid #00BC9D",
+            borderRadius: 3,
+            color: "white",
+            display: "block",
+            margin: 10,
+            padding: 10,
+            textAlign: "center",
+            fontFamily: "Open Sans, sans-serif",
+            cursor: "pointer"
+          }}
+          onClick={e => copyValue(e, jsonValue)}
+        >
+          Copy JSON
+        </div>
         <textarea
-          style={{ width: "100%", height: "100%", border: "none" }}
-          value={JSON.stringify(displayLinks, null, 2)}
+          style={{
+            width: "90%",
+            height: "90%",
+            border: "none",
+            margin: 10,
+            outline: "none"
+          }}
+          value={jsonValue}
           readOnly
         />
       </div>
