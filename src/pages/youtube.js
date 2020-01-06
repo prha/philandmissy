@@ -4,7 +4,7 @@ import { Curator } from "../components/curator";
 
 export default ({ data }) => {
   return (
-    <Curator urlType="twitter" data={data}></Curator>
+    <Curator urlType="youtube" data={data}></Curator>
   );
 };
 
@@ -13,7 +13,7 @@ export const query = graphql`
     allDataJson {
       edges {
         node {
-          twitter {
+          youtube {
             url
             from
             timestamp

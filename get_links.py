@@ -120,7 +120,7 @@ def run():
     service = build('gmail', 'v1', credentials=creds)
 
     email = input("Enter email of person you'd like to find sent links with:\n> ")
-    filename = input("new filename? Blank will create or append to all_links.json:\n> ")
+    filename = input("new filename? Blank will create or append to links.json:\n> ")
     filename = filename or "links"
     start_date = None
 
