@@ -43,6 +43,11 @@ export const Curator = ({ data, urlType }) => {
         {links.map(link => {
           const messageId = link.message_id
           const included = includedLinks[messageId];
+          if (link.url.indexOf('...') > -1) {
+            // messages are snippets; if message is too long, url may be
+            // truncated with `...` at the end. skip them.
+            return
+          }
           return (
             <div
               key={messageId}

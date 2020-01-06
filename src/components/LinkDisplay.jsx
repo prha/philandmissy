@@ -1,6 +1,7 @@
 import React from "react";
 import { TwitterTweetEmbed } from "react-twitter-embed";
 import YouTube from "react-youtube";
+import Microlink from "@microlink/react"
 
 const TWEET_ID_REGEX = /\d+/g;
 
@@ -27,18 +28,14 @@ const getYoutubeId = url => {
 
 export const LinkDisplay = ({ urlType, link }) => {
   if (urlType === "twitter") {
-    return (
-      <TwitterTweetEmbed tweetId={getTweetId(link)} />
-    );
+    return <TwitterTweetEmbed tweetId={getTweetId(link)} />
   }  else if (urlType === "youtube") {
     const opts = {
       height: 180,
       width: 320
     }
-    return (
-      <YouTube videoId={getYoutubeId(link.url)} opts={opts}/>
-    );
+    return <YouTube videoId={getYoutubeId(link.url)} opts={opts}/>
   }
 
-  return link.url
+  return <Microlink url={link.url} media={['image', 'logo']} />
 }
