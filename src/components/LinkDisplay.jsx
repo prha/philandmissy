@@ -1,7 +1,7 @@
 import React from "react";
 import { TwitterTweetEmbed } from "react-twitter-embed";
 import YouTube from "react-youtube";
-import Microlink from "@microlink/react"
+import Microlink from "@microlink/react";
 
 const TWEET_ID_REGEX = /\d+/g;
 
@@ -13,29 +13,30 @@ const getTweetId = link => {
 };
 
 const getYoutubeId = url => {
-  if (url.indexOf('youtu.be') !== -1) {
-    const parts = url.split('youtu.be/');
-    var videoId = parts[parts.length - 1];
+  let videoId;
+  if (url.indexOf("youtu.be") !== -1) {
+    const parts = url.split("youtu.be/");
+    videoId = parts[parts.length - 1];
   } else {
-    var videoId = url.split('v=')[1];
-    const ampersandPosition = videoId.indexOf('&');
-    if(ampersandPosition !== -1) {
+    videoId = url.split("v=")[1];
+    const ampersandPosition = videoId.indexOf("&");
+    if (ampersandPosition !== -1) {
       videoId = videoId.substring(0, ampersandPosition);
     }
   }
   return videoId;
-}
+};
 
 export const LinkDisplay = ({ urlType, link }) => {
   if (urlType === "twitter") {
-    return <TwitterTweetEmbed tweetId={getTweetId(link)} />
-  }  else if (urlType === "youtube") {
+    return <TwitterTweetEmbed tweetId={getTweetId(link)} />;
+  } else if (urlType === "youtube") {
     const opts = {
       height: 180,
       width: 320
-    }
-    return <YouTube videoId={getYoutubeId(link.url)} opts={opts}/>
+    };
+    return <YouTube videoId={getYoutubeId(link.url)} opts={opts} />;
   }
 
-  return <Microlink url={link.url} media={['image', 'logo']} />
-}
+  return <Microlink url={link.url} media={["image", "logo"]} />;
+};

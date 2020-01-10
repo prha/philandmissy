@@ -3,7 +3,6 @@ import { Checkbox } from "../components/checkbox";
 import { LinkDisplay } from "../components/LinkDisplay";
 import { copyValue } from "../util";
 
-
 export const Curator = ({ data, urlType }) => {
   const [includedLinks, setIncludedLinks] = React.useState({});
   let linkMap = {};
@@ -41,17 +40,17 @@ export const Curator = ({ data, urlType }) => {
         }}
       >
         {links.map(link => {
-          const messageId = link.message_id
+          const messageId = link.message_id;
           const included = includedLinks[messageId];
-          if (link.url.indexOf('...') > -1) {
+          if (link.url.indexOf("...") > -1) {
             // messages are snippets; if message is too long, url may be
             // truncated with `...` at the end. skip them.
-            return
+            return null;
           }
           return (
             <div
               key={messageId}
-              style={{ display: "flex", flexDirection: "row", paddingTop: 10}}
+              style={{ display: "flex", flexDirection: "row", paddingTop: 10 }}
             >
               <div>
                 <Checkbox
