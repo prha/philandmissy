@@ -4,6 +4,7 @@ token.pickle
 
 src/data/
 
+*.code-workspace
 *.pyc
 .cache
 node_modules

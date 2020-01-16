@@ -1,11 +1,12 @@
 module.exports = {
   plugins: [
-    'gatsby-transformer-json',
+    "gatsby-transformer-json",
     {
-      resolve: 'gatsby-source-filesystem',
+      resolve: "gatsby-source-filesystem",
       options: {
-        path: './src/data/',
-      },
-    },
-  ],
+        name: "data",
+        path: `${__dirname}/src/data/`
+      }
+    }
+  ]
 };
