@@ -1,5 +1,9 @@
+$green: #0a4449;
+$yellow: #fff7b9;
+
 body {
-  background-color: #0a4449;
+  background-color: $green;
+  color: $yellow;
   font-family: Eina01;
 }
 
@@ -19,4 +23,53 @@ body {
   src: url("../../static/fonts/eina-01-bold.woff2") format("woff2"),
     url("../../static/fonts/eina-01-bold.woff") format("woff");
   font-display: swap;
+}
+
+$breakpoints: (
+  phone: 640px,
+  tablet: 768px,
+  desktop: 1024px
+) !default;
+
+.container {
+  border: 3px solid #fff7b9;
+  margin: 20px;
+  min-height: 900px;
+  display: flex;
+  flex-direction: column;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  text-transform: uppercase;
+  border-bottom: 3px solid $yellow;
+  justify-content: center;
+  align-items: center;
+  min-height: 90vh;
+}
+
+.intro {
+  font-size: 0.5rem;
+  letter-spacing: 0.3em;
+  margin-bottom: 10px;
+}
+
+.title {
+  font-size: 3rem;
+  font-weight: bold;
+  letter-spacing: 0.1em;
+
+  .part {
+    text-align: center;
+    @media (min-width: map-get($breakpoints, tablet)) {
+      display: inline-block;
+      margin-right: 20px;
+    }
+  }
+}
+
+.subtitle {
+  font-size: 1.4rem;
+  letter-spacing: 0.1em;
 }
