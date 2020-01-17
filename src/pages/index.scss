@@ -85,7 +85,7 @@ $breakpoints: (
     text-transform: uppercase;
   }
 
-  .title {
+  .mainTitle {
     text-transform: uppercase;
     font-size: 3rem;
     font-weight: bold;
@@ -136,12 +136,6 @@ $breakpoints: (
   .text {
     padding: 75px;
   }
-  .address .title {
-    font-size: 20px;
-    font-weight: 600;
-    margin-bottom: 10px;
-    letter-spacing: 0.078em;
-  }
   .directions a {
     cursor: pointer;
     &:hover {
@@ -164,6 +158,62 @@ $breakpoints: (
       .map {
         background-size: cover;
       }
+    }
+  }
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 30px;
+  letter-spacing: 0.078em;
+}
+
+.schedule {
+  .subcard {
+    padding: 75px;
+    &:last-child {
+      border-left: 3px solid $yellow;
+    }
+  }
+
+  .scheduleTable {
+    margin-top: 30px;
+    .scheduleRow {
+      margin: 30px 0;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+
+      .time {
+        width: 50px;
+        margin-right: 10px;
+      }
+      .eventName {
+        margin-left: 10px;
+      }
+      .spacer {
+        flex: 1;
+        border-bottom: 0.5px dotted $yellow;
+      }
+    }
+  }
+}
+
+.accommodations {
+  .header {
+    margin: 75px;
+    margin-bottom: 0;
+  }
+  .hotel {
+    flex: 1;
+    margin: 30px 75px;
+    iframe {
+      width: 100%;
+      height: 300px;
+    }
+    .description {
+      margin-top: 30px;
     }
   }
 }
