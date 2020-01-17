@@ -1,10 +1,23 @@
 $green: #0a4449;
 $yellow: #fff7b9;
 
+* {
+  box-sizing: border-box;
+}
+
 body {
   background-color: $green;
   color: $yellow;
   font-family: Eina01;
+
+  a {
+    color: $yellow;
+    cursor: pointer;
+    &:hover {
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  }
 }
 
 @font-face {
@@ -33,6 +46,7 @@ $breakpoints: (
 
 .container {
   border: 3px solid #fff7b9;
+  border-bottom: none;
   margin: 20px;
   min-height: 900px;
   display: flex;
@@ -40,36 +54,116 @@ $breakpoints: (
 }
 
 .card {
+  border-bottom: 3px solid $yellow;
+  min-height: 50%;
+  min-height: 700px;
+}
+
+.subcard {
+  flex: 1;
+}
+
+.column {
   display: flex;
   flex-direction: column;
-  text-transform: uppercase;
-  border-bottom: 3px solid $yellow;
   justify-content: center;
   align-items: center;
-  min-height: 90vh;
 }
 
-.intro {
-  font-size: 0.5rem;
-  letter-spacing: 0.3em;
-  margin-bottom: 10px;
+.row {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: stretch;
 }
 
-.title {
-  font-size: 3rem;
-  font-weight: bold;
-  letter-spacing: 0.1em;
+.main {
+  .intro {
+    font-size: 0.5rem;
+    letter-spacing: 0.3em;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
 
-  .part {
-    text-align: center;
-    @media (min-width: map-get($breakpoints, tablet)) {
-      display: inline-block;
-      margin-right: 20px;
+  .title {
+    text-transform: uppercase;
+    font-size: 3rem;
+    font-weight: bold;
+    letter-spacing: 0.1em;
+
+    .part {
+      text-align: center;
+      @media (min-width: map-get($breakpoints, tablet)) {
+        display: inline-block;
+        margin-right: 20px;
+      }
+    }
+  }
+
+  .subtitle {
+    font-size: 1.4rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .rsvp {
+    margin-top: 75px;
+    position: relative;
+    padding: 20px 80px;
+    cursor: pointer;
+
+    .frame1 {
+      border: 1px solid $yellow;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 5px;
+      right: 5px;
+    }
+
+    .frame2 {
+      border: 1px solid $yellow;
+      position: absolute;
+      top: 5px;
+      bottom: 5px;
+      left: 0;
+      right: 0;
     }
   }
 }
 
-.subtitle {
-  font-size: 1.4rem;
-  letter-spacing: 0.1em;
+.location {
+  .text {
+    padding: 75px;
+  }
+  .address .title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    letter-spacing: 0.078em;
+  }
+  .directions a {
+    cursor: pointer;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+  .map {
+    background-image: url("../../static/images/saratoga_lake.svg");
+    background-position: center -1px;
+    background-repeat: no-repeat;
+    background-size: contain;
+    cursor: pointer;
+  }
+}
+@media (max-width: map-get($breakpoints, tablet)) {
+  .location {
+    display: block;
+    .subcard {
+      height: 500px;
+      .map {
+        background-size: cover;
+      }
+    }
+  }
 }
