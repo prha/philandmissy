@@ -1,6 +1,6 @@
 import React from "react";
-import { Checkbox } from "../components/checkbox";
-import { LinkDisplay } from "../components/LinkDisplay";
+import { Checkbox } from "./Checkbox";
+import { LinkDisplay } from "./LinkDisplay";
 import { copyValue } from "../util";
 
 export const Curator = ({ data, urlType }) => {

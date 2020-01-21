@@ -3,6 +3,7 @@
     "@microlink/react": "^4.5.1",
     "gatsby": "^2.18.5",
     "gatsby-cli": "^2.8.22",
+    "gatsby-plugin-create-client-paths": "^2.1.21",
     "gatsby-plugin-sass": "^2.1.27",
     "gatsby-source-filesystem": "^2.1.42",
     "gatsby-transformer-json": "^2.2.22",
