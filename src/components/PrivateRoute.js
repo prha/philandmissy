@@ -2,12 +2,19 @@ import React from "react";
 import { navigate } from "gatsby";
 import { isLoggedIn } from "../services/auth";
 
-const PrivateRoute = ({ component: Component, location, ...rest }) => {
-  if (!isLoggedIn() && location.pathname !== `/login`) {
-    navigate("/login");
-    return null;
+export default class PrivateRoute extends React.Component {
+  componentDidMount() {
+    const { location } = this.props;
+    if (!isLoggedIn() && location.pathname !== `/login`) {
+      navigate("/login");
+    }
   }
-  return <Component {...rest} />;
-};
 
-export default PrivateRoute;
+  render() {
+    const { component: Component, location, ...rest } = this.props;
+    if (!isLoggedIn() && location.pathname !== `/login`) {
+      return null;
+    }
+    return <Component {...rest} />;
+  }
+}
