@@ -132,8 +132,8 @@ const App = () => (
 export default () => {
   return (
     <Router>
-      <Login path="/login" />
-      <PrivateRoute path="/" component={App} />
+      <Login path="/missyandphil/login" />
+      <PrivateRoute path="/missyandphil/" component={App} />
     </Router>
   );
 };

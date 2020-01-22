@@ -25,7 +25,7 @@ class Login extends React.Component {
   render() {
     const { error } = this.state;
     if (isLoggedIn()) {
-      navigate(`/`);
+      navigate(`/missyandphil/`);
     }
 
     return (
