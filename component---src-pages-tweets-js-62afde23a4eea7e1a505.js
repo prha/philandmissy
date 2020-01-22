@@ -1,2 +1,0 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([[4],{JsUE:function(t,n,a){"use strict";a.r(n),a.d(n,"query",(function(){return c}));var e=a("q1tI"),r=a.n(e),u=a("PvzS");n.default=function(t){var n=t.data;return r.a.createElement(u.a,{urlType:"twitter",data:n})};var c="535778752"}}]);
-//# sourceMappingURL=component---src-pages-tweets-js-62afde23a4eea7e1a505.js.map
