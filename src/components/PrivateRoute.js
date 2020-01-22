@@ -6,7 +6,7 @@ export default class PrivateRoute extends React.Component {
   componentDidMount() {
     const { location } = this.props;
     if (!isLoggedIn() && location.pathname !== `/missyandphil/login`) {
-      navigate("/missyandphil/login");
+      navigate("/login");
     }
   }
 
