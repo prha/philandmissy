@@ -1,2 +1,0 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([[5],{Qdi3:function(n,t,a){"use strict";a.r(t),a.d(t,"query",(function(){return o}));var e=a("q1tI"),r=a.n(e),u=a("PvzS");t.default=function(n){var t=n.data;return r.a.createElement(u.a,{urlType:"youtube",data:t})};var o="1195811627"}}]);
-//# sourceMappingURL=component---src-pages-youtube-js-96700639b67f722e9ed2.js.map
